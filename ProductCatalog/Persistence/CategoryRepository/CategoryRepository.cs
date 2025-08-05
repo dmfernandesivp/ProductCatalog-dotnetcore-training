@@ -17,7 +17,7 @@ public class CategoryRepository : ICategoryRepository
     {
         const string sql = "SELECT * FROM Categories WHERE IsActive = 1";
 
-        using var connection = _context.CreateConnection();
+        var connection = _context.CreateConnection();
         return await connection.QueryAsync<Category>(sql);
     }
 

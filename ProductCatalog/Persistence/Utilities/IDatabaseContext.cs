@@ -18,10 +18,14 @@ public class DatabaseContext : IDatabaseContext
     {
         _connectionString = configuration.GetConnectionString("DefaultConnection") ??
             throw new InvalidOperationException("Connection string not found");
+
     }
 
     public IDbConnection CreateConnection()
     {
-        return new SqlConnection(_connectionString);
+
+        var sqlConn = new SqlConnection(_connectionString);
+
+        return sqlConn;
     }
 }
