@@ -1,5 +1,6 @@
 using Application.CategoryService;
 using Application.ProductService;
+using Application.ServiceLifecycleDemo;
 using Persistence.CategoryRepository;
 using Persistence.ProductRepository;
 using Persistence.Utilities;
@@ -24,6 +25,14 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
         });
 });
+
+
+builder.Services.AddSingleton<SingletonNumberService>();
+builder.Services.AddScoped<ScopedNumberService>();
+builder.Services.AddTransient<TransientNumberService>();
+
+// Register application service as scoped
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
 
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
