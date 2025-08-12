@@ -1,31 +1,43 @@
-using Application.CategoryService;
+﻿using Application.CategoryService;
 using Application.ProductService;
 using Application.ServiceLifecycleDemo;
+using Application.TodoApp;
 using Persistence.CategoryRepository;
 using Persistence.ProductRepository;
+using Persistence.TodoRepository;
 using Persistence.Utilities;
+using System.Text.Json.Serialization;
 using WebApi.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins("http://localhost:5173")
                   .AllowAnyHeader()
             .AllowAnyMethod();
         });
 });
 
+
+builder.Services.AddTransient<ITodoService, TodoService>();
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 
 builder.Services.AddSingleton<SingletonNumberService>();
 builder.Services.AddScoped<ScopedNumberService>();
@@ -51,8 +63,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("AllowReactApp");
+
+//app.UseHttpsRedirection();
 
 
 app.UseMiddleware<GlobalExceptionHandler>();
